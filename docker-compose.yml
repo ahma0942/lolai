@@ -1,0 +1,115 @@
+version: '3.3'
+
+services:
+
+  api:
+    build: api
+    volumes:
+      - ./api:/var/www/api:delegated
+    ports:
+      - 9003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - mysql
+      - redis
+      - phpmyadmin
+      - mail
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`api.localhost`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "--entrypoints.web.address=:8080"
+
+  swagger:
+    build: swagger
+    ports:
+      - 9003
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./swagger:/var/www/swagger:delegated
+      - ./api/controllers:/var/www/controllers:delegated
+      - ./api/envs:/var/www/envs:delegated
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.swagger.rule=Host(`swagger.localhost`)"
+      - "traefik.http.routers.swagger.entrypoints=web"
+      - "--entrypoints.web.address=:8081"
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: default_php
+      MYSQL_DATABASE: default_php
+      MYSQL_USER: default_php
+      MYSQL_PASSWORD: default_php
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: default_php
+      PMA_PASSWORD: default_php
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.phpmyadmin.rule=Host(`phpmyadmin.localhost`)"
+      - "traefik.http.routers.phpmyadmin.entrypoints=web"
+      - "--entrypoints.web.address=:80"
+
+  redis:
+    image: redis:alpine
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    environment:
+      - REDIS_HOSTS=default_php:redis:6379
+    depends_on:
+      - redis
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.redis_commander.rule=Host(`redis.localhost`)"
+      - "traefik.http.routers.redis_commander.entrypoints=web"
+      - "traefik.http.routers.redis_commander.service=redis_commander"
+      - "traefik.http.services.redis_commander.loadbalancer.server.port=8081"
+
+  mail:
+    user: root
+    image: mailhog/mailhog
+    command: ["-storage=maildir", "-maildir-path=/maildir"]
+    volumes:
+      - ./data/mailhog:/maildir
+    ports:
+      - "1025:1025"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mail.rule=Host(`mail.localhost`)"
+      - "traefik.http.routers.mail.entrypoints=web"
+      - "traefik.http.routers.mail.service=mail"
+      - "traefik.http.services.mail.loadbalancer.server.port=8025"
+
+  traefik:
+    image: "traefik:v2.2"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=HostRegexp(`traefik.localhost`)"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "--entrypoints.api.address=:80"
