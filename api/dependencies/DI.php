@@ -11,6 +11,7 @@ class DI
     private static Queue $queue;
     private static GuzzleHttp\Client $http;
     private static Discord $discord;
+    private static Lolai $lolai;
 
     public static function logger() {
         if (!isset(SELF::$logger)) {
@@ -107,5 +108,13 @@ class DI
         }
 
         return SELF::$http;
+    }
+
+    public static function lolai() {
+        if (!isset(SELF::$lolai)) {
+            SELF::$lolai =  new Lolai();
+        }
+
+        return SELF::$lolai;
     }
 }

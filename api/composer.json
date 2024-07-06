@@ -12,6 +12,7 @@
         "predis/predis": "^1.1",
         "fakerphp/faker": "^1.13",
         "guzzlehttp/guzzle": "^7.4",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "php-ai/php-ml": "^0.10"
     }
 }

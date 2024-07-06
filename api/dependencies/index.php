@@ -4,6 +4,7 @@ include 'Rest.php';
 include 'Logger.php';
 include 'Cache.php';
 include 'Discord.php';
+include 'Lolai.php';
 include 'DI.php';
 include "Redbean.php";
 

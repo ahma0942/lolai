@@ -12,8 +12,8 @@ RUN echo "xdebug.client_log = /var/www/api/logs/xdeubg.log" >> /usr/local/etc/ph
 
 ARG UID=1000
 ARG GID=1000
-RUN groupadd -g $GID default_php && useradd -u $UID -g default_php -s /bin/sh default_php
-USER default_php
+RUN groupadd -g $GID lolai && useradd -u $UID -g lolai -s /bin/sh lolai
+USER lolai
 
 WORKDIR /var/www/api
 EXPOSE 8080

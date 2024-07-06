@@ -3,20 +3,20 @@ $ENV = [
     'ENV' => 'LOCAL',
 
     'DBHOST' => 'mysql',
-    'DBUSER' => 'default_php',
-    'DBPASS' => 'default_php',
-    'DBNAME' => 'default_php',
+    'DBUSER' => 'lolai',
+    'DBPASS' => 'lolai',
+    'DBNAME' => 'lolai',
 
     'URL' => 'api.localhost',
     'API' => 'api.localhost',
-    'APP' => 'default_php.localhost',
-    'APPNAME' => 'Default_php',
+    'APP' => 'lolai.localhost',
+    'APPNAME' => 'lolai',
 
     'MAILER' => [
         'HOST' => 'mail',
         'USER' => '',
         'PASS' => '',
         'PORT' => '1025',
-        'MAIL' => 'info@default_php.dk',
+        'MAIL' => 'info@lolai.dk',
     ],
 ];
