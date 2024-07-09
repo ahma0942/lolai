@@ -13,8 +13,13 @@ class Queue
         $this->client->lpush($queue, $data);
     }
 
-    public function next($queue)
+    public function pop($queue)
     {
         return $this->client->lpop($queue);
+    }
+
+    public function next($queue)
+    {
+        return $this->client->lindex($queue, 0);
     }
 }

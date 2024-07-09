@@ -9,7 +9,7 @@ include "funcs/funcs.util.php";
 cors();
 include "envs/.env.php";
 include "envs/.env.global.php";
+include "models/index.php";
 include "dependencies/index.php";
-include "middlewares/index.php";
 include "controllers/index.php";
 http(404);

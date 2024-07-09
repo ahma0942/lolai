@@ -1,12 +1,15 @@
 <?php
+use \RedBeanPHP\R as R;
+
 include 'Mail.php';
 include 'Rest.php';
 include 'Logger.php';
 include 'Cache.php';
 include 'Discord.php';
 include 'Lolai.php';
+include 'Queue.php';
+include 'ML.php';
 include 'DI.php';
-include "Redbean.php";
 
 R::setup('mysql:host=' . DI::env('DBHOST') . ';dbname=' . DI::env('DBNAME'), DI::env('DBUSER'), DI::env('DBPASS'));
 R::useFeatureSet('novice/latest');

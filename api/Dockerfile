@@ -1,8 +1,10 @@
-FROM php:8.1.11-zts
+FROM php:8.3.9-zts-alpine3.20
 
-RUN apt-get update && apt-get install -y git ssh zip unzip
+RUN apk update && apk upgrade && apk add curl-dev openssl-dev git openssh zip unzip $PHPIZE_DEPS --update linux-headers
+
 RUN docker-php-ext-install mysqli pdo pdo_mysql
-RUN pecl install xdebug-3.1.3 && docker-php-ext-enable xdebug
+RUN pecl install xdebug-3.3.2 && docker-php-ext-enable xdebug
+RUN pecl install mongodb && docker-php-ext-enable mongodb
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer
 
 RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -12,7 +14,8 @@ RUN echo "xdebug.client_log = /var/www/api/logs/xdeubg.log" >> /usr/local/etc/ph
 
 ARG UID=1000
 ARG GID=1000
-RUN groupadd -g $GID lolai && useradd -u $UID -g lolai -s /bin/sh lolai
+RUN addgroup --system --gid $GID lolai
+RUN adduser --system --uid $UID --ingroup lolai lolai
 USER lolai
 
 WORKDIR /var/www/api

@@ -19,4 +19,12 @@ $ENV = [
         'PORT' => '1025',
         'MAIL' => 'info@lolai.dk',
     ],
+
+    'MONGODB' => 'mongodb://lolai:lolai@mongo:27017',
+
+    'REDIS' => [
+        'scheme' => 'tcp',
+        'host' => 'redis',
+        'port' => 6379
+    ],
 ];

@@ -13,6 +13,8 @@
         "fakerphp/faker": "^1.13",
         "guzzlehttp/guzzle": "^7.4",
         "ext-mbstring": "*",
-        "php-ai/php-ml": "^0.10"
+        "php-ai/php-ml": "^0.10",
+        "gabordemooij/redbean": "dev-master",
+        "mongodb/mongodb": "^1.19"
     }
 }

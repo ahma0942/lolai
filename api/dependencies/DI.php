@@ -1,4 +1,5 @@
 <?php
+
 use Twilio\Rest\Client;
 
 class DI
@@ -8,12 +9,15 @@ class DI
     private static Mail $mail;
     private static Predis\Client $redis;
     private static Cache $cache;
+    private static MongoDB\Client $mongodb;
     private static Queue $queue;
     private static GuzzleHttp\Client $http;
     private static Discord $discord;
     private static Lolai $lolai;
+    private static ML $ml;
 
-    public static function logger() {
+    public static function logger()
+    {
         if (!isset(SELF::$logger)) {
             SELF::$logger = new Log();
         }
@@ -21,7 +25,8 @@ class DI
         return SELF::$logger;
     }
 
-    public static function discord() {
+    public static function discord()
+    {
         if (!isset(SELF::$discord)) {
             SELF::$discord = new Discord();
         }
@@ -29,7 +34,8 @@ class DI
         return SELF::$discord;
     }
 
-    public static function rest(): Rest {
+    public static function rest(): Rest
+    {
         if (!isset(SELF::$rest)) {
             SELF::$rest = new Rest();
         }
@@ -37,7 +43,8 @@ class DI
         return SELF::$rest;
     }
 
-    public static function mail($to, $subject, $body) {
+    public static function mail($to, $subject, $body)
+    {
         if (!isset(SELF::$mail)) {
             SELF::$mail = new Mail();
         }
@@ -45,7 +52,8 @@ class DI
         return SELF::$mail->send($to, $subject, $body);
     }
 
-    public static function sms($to, $body) {
+    public static function sms($to, $body)
+    {
         $twilio = new Client(SELF::env('TWILIO_SID'), SELF::env('TWILIO_TOKEN'));
         $twilio->messages->create($to, [
             "body" => $body,
@@ -58,7 +66,8 @@ class DI
      * 
      * @example With the following array, we could use env('test.1') to get the index ['test']['1']: ['test' => ['1' => 'test1', '2' => 'test1']]
      */
-    public static function env(string $get = null) {
+    public static function env(string $get = null)
+    {
         global $ENV;
 
         if ($get == null) return $ENV;
@@ -78,7 +87,17 @@ class DI
         }
     }
 
-    public static function redis() {
+    public static function mongodb()
+    {
+        if (!isset(SELF::$mongodb)) {
+            SELF::$mongodb = new MongoDB\Client(SELF::env('MONGODB'));
+        }
+
+        return SELF::$mongodb;
+    }
+
+    public static function redis()
+    {
         if (!isset(SELF::$redis)) {
             SELF::$redis =  new Predis\Client(SELF::env('REDIS'));
         }
@@ -86,7 +105,8 @@ class DI
         return SELF::$redis;
     }
 
-    public static function cache() {
+    public static function cache()
+    {
         if (!isset(SELF::$cache)) {
             SELF::$cache =  new Cache(SELF::redis());
         }
@@ -94,7 +114,8 @@ class DI
         return SELF::$cache;
     }
 
-    public static function queue() {
+    public static function queue()
+    {
         if (!isset(SELF::$queue)) {
             SELF::$queue =  new Queue(SELF::redis());
         }
@@ -102,7 +123,8 @@ class DI
         return SELF::$queue;
     }
 
-    public static function http() {
+    public static function http()
+    {
         if (!isset(SELF::$http)) {
             SELF::$http =  new GuzzleHttp\Client();
         }
@@ -110,11 +132,21 @@ class DI
         return SELF::$http;
     }
 
-    public static function lolai() {
+    public static function lolai()
+    {
         if (!isset(SELF::$lolai)) {
             SELF::$lolai =  new Lolai();
         }
 
         return SELF::$lolai;
+    }
+
+    public static function ML()
+    {
+        if (!isset(SELF::$ml)) {
+            SELF::$ml =  new ML();
+        }
+
+        return SELF::$ml;
     }
 }
